@@ -1,0 +1,206 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Mobile APIs
+# during dev, should point to your local machine
+host: localhost:8080
+# basePath prefixes all resource paths
+basePath: /
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /mobile/v1/check/:
+    x-swagger-router-controller: check
+    get:
+      operationId: check
+      description: Check if the device is registered for mobile enablement.
+      parameters:
+        - name: deviceId
+          in: query
+          description: deviceId
+          required: true
+          type: string
+          minimum: 1
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ResponseFormat"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /mobile/v1/enable/:
+    x-swagger-router-controller: enable
+    post:
+      description: Verify the reference number and register the device and phone number for mobile enablement.
+      operationId: enable
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Enablement details"
+          required: true
+          schema:
+            $ref: "#/definitions/UserDetails"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ResponseFormat"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /mobile/v1/register/:
+    x-swagger-router-controller: register
+    post:
+      description: Register the user.
+      operationId: register
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Registeration details"
+          required: true
+          schema:
+            $ref: "#/definitions/RegisterRequest"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ResponseFormat"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /mobile/v1/login/:
+    x-swagger-router-controller: login
+    post:
+      description: Logs in the user.
+      operationId: login
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Login details"
+          required: true
+          schema:
+            $ref: "#/definitions/LoginRequest"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ResponseFormat"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /mobile/v1/profile/:
+    x-swagger-router-controller: profile
+    get:
+      description: Returns the profile history of user
+      operationId: profile
+      parameters:
+        - name: userIdentifier
+          in: query
+          description: userIdentifier
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ResponseFormat"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /mobile/v1/send-money/:
+    x-swagger-router-controller: profile
+    post:
+      description: Returns the profile history of user
+      operationId: sendMoney
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User details"
+          required: true
+          schema:
+            $ref: "#/definitions/LoginRequest"
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ResponseFormat"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+# complex objects have schema definitions
+definitions:
+  RegisterRequest:
+    type: object
+    required:
+      - email
+      - password
+      - userId
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      userId:
+        type: string
+  LoginRequest:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  UserDetails:
+    type: object
+    required:
+      - deviceId
+      - referenceNumber
+    properties:
+      deviceId:
+        type: string
+      referenceNumber:
+        type: string
+  ResponseFormat:
+    type: object
+    required:
+      - data
+      - userMessage
+      - internalMessage
+    properties:
+      data:
+        type: object
+      userMessage:
+        type: string
+      internalMessage:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
