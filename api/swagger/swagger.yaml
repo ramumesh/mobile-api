@@ -18,18 +18,119 @@ consumes:
 produces:
   - application/json
 paths:
-  /mobile/v1/check/:
-    x-swagger-router-controller: check
+  /user/login:
+    x-swagger-router-controller: loginUser
+    post:
+      operationId: loginUser
+      summary: This api is to log in the user with a phone and password.
+      consumes: 
+        - application/json
+      parameters:
+      - in: body
+        name: loginUserRequestFormat
+        description: Login user details request
+        schema:
+          $ref: '#/definitions/LoginUserRequestFormat'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ResponseFormat"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/register:
+    x-swagger-router-controller: registerUser
+    post:
+      operationId: registerUser
+      summary: This api is to register the user with a password.
+      consumes: 
+        - application/json
+      parameters:
+      - in: body
+        name: registerUserRequestFormat
+        description: Register request format
+        schema:
+          $ref: '#/definitions/RegisterUserRequestFormat'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ResponseFormat"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      
+  /user/validate:
+    x-swagger-router-controller: validateUser
+    post:
+      operationId: validateUser
+      summary: This api is to validate the user details got from the invite url.
+      consumes: 
+        - application/json
+      parameters:
+      - in: body
+        name: validateUserRequestFormat
+        description: User details request
+        schema:
+          $ref: '#/definitions/ValidateUserRequestFormat'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ResponseFormat"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /user/profile:
+    x-swagger-router-controller: getProfile
     get:
-      operationId: check
-      description: Check if the device is registered for mobile enablement.
+      operationId: getProfile
+      summary: This api is to get the profile of the user.
+      consumes: 
+        - application/json
       parameters:
-        - name: deviceId
-          in: query
-          description: deviceId
-          required: true
+      - in: query
+        name: customerId
+        description: customerId of the user
+        type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/ResponseFormat"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /profile/enable:
+    x-swagger-router-controller: enableProfile
+    post:
+      operationId: enableProfile
+      summary: This api is used for enabling the customer and sharing the customers profile with the system.
+      consumes:
+        - application/json
+      parameters:
+        - in: header
+          name: vendorId
+          description: Vendor Identifier
           type: string
-          minimum: 1
+        - in: body
+          name: user
+          description: The user to create.
+          schema:
+            $ref: '#/definitions/ProfileShareRequestFormat'     # <----------
       responses:
         "200":
           description: Success
@@ -41,150 +142,60 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /mobile/v1/enable/:
-    x-swagger-router-controller: enable
-    post:
-      description: Verify the reference number and register the device and phone number for mobile enablement.
-      operationId: enable
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Enablement details"
-          required: true
-          schema:
-            $ref: "#/definitions/UserDetails"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ResponseFormat"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /mobile/v1/register/:
-    x-swagger-router-controller: register
-    post:
-      description: Register the user.
-      operationId: register
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Registeration details"
-          required: true
-          schema:
-            $ref: "#/definitions/RegisterRequest"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ResponseFormat"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /mobile/v1/login/:
-    x-swagger-router-controller: login
-    post:
-      description: Logs in the user.
-      operationId: login
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Login details"
-          required: true
-          schema:
-            $ref: "#/definitions/LoginRequest"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ResponseFormat"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /mobile/v1/profile/:
-    x-swagger-router-controller: profile
-    get:
-      description: Returns the profile history of user
-      operationId: profile
-      parameters:
-        - name: userIdentifier
-          in: query
-          description: userIdentifier
-          required: true
-          type: string
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/ResponseFormat"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /mobile/v1/send-money/:
-    x-swagger-router-controller: profile
-    post:
-      description: Returns the profile history of user
-      operationId: sendMoney
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "User details"
-          required: true
-          schema:
-            $ref: "#/definitions/LoginRequest"
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/ResponseFormat"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-
+  
 # complex objects have schema definitions
 definitions:
-  RegisterRequest:
+  LoginUserRequestFormat:
     type: object
-    required:
-      - email
-      - password
-      - userId
     properties:
-      email:
+      phone:
         type: string
-      password:
+      pin:
         type: string
-      userId:
-        type: string
-  LoginRequest:
+  RegisterUserRequestFormat:
     type: object
-    required:
-      - email
-      - password
     properties:
-      email:
+      phone:
         type: string
-      password:
+      pin:
         type: string
-  UserDetails:
+  ValidateUserRequestFormat:
     type: object
-    required:
-      - deviceId
-      - referenceNumber
     properties:
-      deviceId:
+      phone:
         type: string
-      referenceNumber:
+      referenceCode:
         type: string
+      vendorId:
+        type: string
+      vendorCustomerId:
+        type: string
+      vendorStoreNumber:
+        type: string
+  ProfileShareRequestFormat:
+    type: object
+    properties:
+      firstName:
+        type: string
+      middleName:
+        type: string
+      lastName:
+        type: string
+      phoneNumber:
+        type: integer
+      address:
+        type: string
+      city:
+        type: string
+      county:
+        type: string
+      state:
+        type: string
+      zip:
+        type: integer
+      vendorCustomerId:
+        type: string
+  
   ResponseFormat:
     type: object
     required:
