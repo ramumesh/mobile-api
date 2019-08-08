@@ -27,7 +27,7 @@ paths:
         - application/json
       parameters:
       - in: body
-        name: loginUserRequestFormat
+        name: body
         description: Login user details request
         schema:
           $ref: '#/definitions/LoginUserRequestFormat'
@@ -51,7 +51,7 @@ paths:
         - application/json
       parameters:
       - in: body
-        name: registerUserRequestFormat
+        name: body
         description: Register request format
         schema:
           $ref: '#/definitions/RegisterUserRequestFormat'
@@ -76,7 +76,7 @@ paths:
         - application/json
       parameters:
       - in: body
-        name: validateUserRequestFormat
+        name: body
         description: User details request
         schema:
           $ref: '#/definitions/ValidateUserRequestFormat'
@@ -127,7 +127,7 @@ paths:
           description: Vendor Identifier
           type: string
         - in: body
-          name: user
+          name: body
           description: The user to create.
           schema:
             $ref: '#/definitions/ProfileShareRequestFormat'     # <----------
@@ -194,6 +194,8 @@ definitions:
       zip:
         type: integer
       vendorCustomerId:
+        type: string
+      homeStoreNumber:
         type: string
   
   ResponseFormat:

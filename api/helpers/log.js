@@ -8,7 +8,7 @@ module.exports = {
     if (typeof msg === 'string') {
       logger.info(msg);
     } else {
-      logger.info(JSON.stringify(msg));
+      logger.info(JSON.stringify(msg, null, 4));
     }
   },
   error: function(msg) {
@@ -16,14 +16,14 @@ module.exports = {
     if (typeof msg === 'string') {
       logger.error(msg);
     } else {
-      logger.error(JSON.stringify(msg));
+      logger.error(JSON.stringify(msg, null, 4));
     }
   },
   debug: function(msg) {
     if (typeof msg === 'string') {
       logger.debug(msg);
     } else {
-      logger.debug(JSON.stringify(msg));
+      logger.debug(JSON.stringify(msg, null, 4));
     }
   }
 };
