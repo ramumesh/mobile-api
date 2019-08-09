@@ -126,6 +126,7 @@ paths:
           name: vendorId
           description: Vendor Identifier
           type: string
+          required: true
         - in: body
           name: body
           description: The user to create.
@@ -148,17 +149,23 @@ definitions:
   LoginUserRequestFormat:
     type: object
     properties:
-      phone:
+      phoneNumber:
         type: string
       pin:
         type: string
+    required:
+     - phoneNumber
+     - pin
   RegisterUserRequestFormat:
     type: object
     properties:
-      phone:
+      phoneNumber:
         type: string
       pin:
         type: string
+    required:
+     - phoneNumber
+     - pin
   ValidateUserRequestFormat:
     type: object
     properties:
@@ -197,7 +204,13 @@ definitions:
         type: string
       homeStoreNumber:
         type: string
-  
+    required:
+     - phoneNumber
+     - firstName
+     - address
+     - vendorCustomerId
+     - homeStoreNumber
+     
   ResponseFormat:
     type: object
     required:

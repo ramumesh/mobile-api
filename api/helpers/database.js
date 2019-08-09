@@ -11,7 +11,7 @@ exports.initialize = async function() {
       host: '127.0.0.1',
       user: 'root',
       password: 'Password@123',
-      database: 'mobile'
+      database: 'enviamajor_db'
     }
   });
   return client.raw('SELECT 1 as dbIsUp;');
@@ -23,4 +23,7 @@ exports.executeSelect = async function(query) {
 
 exports.insertToTable = async function(query) {
   return client(query.tableName).insert(query.data);
+};
+exports.updateTable = async function(query) {
+  return client(query.tableName).update(query.data);
 };

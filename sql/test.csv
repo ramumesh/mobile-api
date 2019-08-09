@@ -1,0 +1,12 @@
+Field,Type,Null,Key,Default,Extra
+customerId,int(11),NO,PRI,NULL,auto_increment
+phoneNumber,varchar(12),NO,,NULL,
+firstName,varchar(25),NO,,NULL,
+lastName,varchar(45),YES,,NULL,
+address,text,YES,,NULL,
+city,varchar(20),YES,,NULL,
+country,varchar(20),YES,,NULL,
+state,varchar(20),YES,,NULL,
+zip,varchar(10),YES,,NULL,
+createTs,datetime,YES,,CURRENT_TIMESTAMP,
+modifyTs,datetime,YES,,CURRENT_TIMESTAMP,"on update CURRENT_TIMESTAMP"
