@@ -77,7 +77,7 @@ paths:
       parameters:
       - in: body
         name: body
-        description: User details request
+        description: User invite url validation request
         schema:
           $ref: '#/definitions/ValidateUserRequestFormat'
       responses:
@@ -169,16 +169,13 @@ definitions:
   ValidateUserRequestFormat:
     type: object
     properties:
-      phone:
-        type: string
       referenceCode:
         type: string
-      vendorId:
+      referenceToken:
         type: string
-      vendorCustomerId:
-        type: string
-      vendorStoreNumber:
-        type: string
+    required:
+     - referenceCode
+     - referenceToken
   ProfileShareRequestFormat:
     type: object
     properties:

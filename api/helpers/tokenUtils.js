@@ -1,20 +1,25 @@
-'use strict';
 var jwt = require('jsonwebtoken');
+
 exports.getToken = function(data) {
-  return jwt.sign(
-    {
-      data: data
-    },
-    'secret',
-    { expiresIn: 3 }
-  );
+  return new Promise(function(resolve, reject) {
+    jwt.sign(data, 'secret', function(err, token) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(token);
+      }
+    });
+  });
 };
 
 exports.decodeToken = function(token) {
-  jwt.verify(token, 'secret', function(err, decoded) {
-    if (err) {
-      console.log(err);
-    }
-    console.log(decoded);
+  return new Promise(function(resolve, reject) {
+    jwt.verify(token, 'secret', function(err, decoded) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(decoded);
+      }
+    });
   });
 };

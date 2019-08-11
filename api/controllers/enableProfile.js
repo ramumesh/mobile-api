@@ -25,6 +25,12 @@ function enableProfile(req, res) {
   });
 }
 
+/**
+ * Insert data to profile table
+ * Insert data to vendorMapping table
+ * Generate invite url and reference code
+ * Insert data to login table
+ */
 exports._handleEnableProfile = async function(service, callback) {
   try {
     const profileQueryData = {
@@ -43,14 +49,17 @@ exports._handleEnableProfile = async function(service, callback) {
     };
     const vendorMappingResult = await database.insertToTable(vendorMappingQueryData);
     log.info(vendorMappingResult);
-    const inviteUrl = exports._createInviteUrl(service);
+    const inviteUrl = await exports._createInviteUrl(service);
+    const referenceCode = exports._createReferenceCode();
     log.info(inviteUrl);
+    log.info(referenceCode);
     const loginQueryData = {
       tableName: queryUtils.TABLES.login.name,
       data: {
         customerId: customerId,
         phoneNumber: service.requestData.phoneNumber,
-        inviteUrl: inviteUrl
+        inviteUrl: inviteUrl,
+        referenceCode: referenceCode
       }
     };
     const loginQueryResult = await database.insertToTable(loginQueryData);
@@ -69,15 +78,19 @@ exports._handleEnableProfile = async function(service, callback) {
     if (e.code === 'ER_DUP_ENTRY') {
       userError = responseUtils.getErrorResponse('ALREADY_ENABLED_PROFILE', 'Profile already enabled for this user');
     } else {
-      userError = e;
+      userError = responseUtils.getErrorResponse(e.message, e);
     }
     return callback(userError);
   }
 };
 
-exports._createInviteUrl = function(service) {
-  var appUrl = 'https://app.com/register?';
+exports._createInviteUrl = async function(service) {
+  var appUrl = 'http://localhost:8100/verify?';
   var data = _.pick(service.requestData, ['vendorId', 'vendorCustomerId', 'phoneNumber', 'homeStoreNumber']);
-  appUrl += 'refCode=' + tokenUtils.getToken(data);
+  appUrl += 'refToken=' + (await tokenUtils.getToken(data));
   return appUrl;
+};
+
+exports._createReferenceCode = function() {
+  return Math.floor(100000 + Math.random() * 900000);
 };

@@ -19,7 +19,6 @@ function registerUser(req, res) {
       return responseUtils.sendResponse(err, res);
     }
     responseUtils.sendResponse(data, res);
-    res.json();
   });
 }
 exports._handleRegisterUser = async function(service, callback) {
