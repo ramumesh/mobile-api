@@ -4,7 +4,7 @@ exports.getToken = function(data) {
   return new Promise(function(resolve, reject) {
     jwt.sign(data, 'secret', function(err, token) {
       if (err) {
-        reject(err);
+        throw err;
       } else {
         resolve(token);
       }

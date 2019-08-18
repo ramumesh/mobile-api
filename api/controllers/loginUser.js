@@ -19,7 +19,7 @@ function loginUser(req, res) {
     if (err) {
       return responseUtils.sendResponse(err, res);
     }
-    res.cookie('token', data.token, { maxAge: 86400 });
+    //res.cookie('token', data.token, { maxAge: 86400 });
     responseUtils.sendResponse(responseUtils.getResponse(data, 'LOGIN_SUCCESSFULL', 'User log in successfull'), res);
   });
 }
@@ -35,12 +35,14 @@ exports._handleLoginUser = async function(service, callback) {
         responseUtils.getErrorResponse('USERNAME_OR_PASSWORD_INCORRECT', 'Username or password is incorrect')
       );
     } else {
-      let token = tokenUtils.getToken(isValidLoginQueryResult[0][0].customerId);
+      log.info('test=' + isValidLoginQueryResult[0][0].customerId);
+      let token = await tokenUtils.getToken(isValidLoginQueryResult[0][0].customerId + '');
+      log.info('test=' + token);
       return callback(null, { customerId: isValidLoginQueryResult[0][0].customerId, token });
     }
   } catch (e) {
     log.error(e);
-    return callback(e);
+    return callback(responseUtils.getErrorResponse(require('util').inspect(e)));
   }
 };
 
